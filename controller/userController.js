@@ -1,130 +1,115 @@
-const { urlencoded } = require('express')
-const express = require('express')
-const router = express.Router()
-const passport = require('passport')
-const app = express()
-const Order = require('./../models/Order')
-const User = require('./../models/user')
-const Patient = require('./../models/Patient')
-const Hospital = require('./../models/Hosp')
-const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
-const Appointment = require('./../models/Appointment')
+const { urlencoded } = require("express");
+const express = require("express");
+const router = express.Router();
+const passport = require("passport");
+const app = express();
+const Order = require("./../models/Order");
+const User = require("./../models/user");
+const Patient = require("./../models/Patient");
+const Hospital = require("./../models/Hosp");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const Appointment = require("./../models/Appointment");
 
 module.exports.renderRegister = (req, res) => {
-  res.render('users/finale')
-}
+  res.render("users/finale");
+};
 module.exports.renderRegisterHosp = (req, res) => {
-  res.render('users/hospreg')
-}
+  res.render("users/hospreg");
+};
 
 module.exports.register = async (req, res, next) => {
   try {
-    console.log(req.body)
-    const {
-      email,
-      username,
-      password,
-
-      fname,
-      frname,
-      lname,
-      ht,
-      gen,
-      st,
-      adno,
-      mname,
-      phn,
-      wt,
-      add,
-      zc,
-    } = req.body
+    console.log(req.body);
+    const { email, username, password, ht, gen, st, adno, phn, wt, add, zc } =
+      req.body;
 
     // comp_type = 'hosp'
-    const user = new User({ email, username })
+    const user = new User({ email, username });
+    console.log(ht);
+    console.log(st);
+    console.log(gen);
+    console.log(phn);
+    console.log(zc);
+    console.log(wt);
 
-    const registeredUser = await User.register(user, password)
-    const Patient_id = registeredUser._id.toString()
-    console.log(registeredUser._id.toString())
+    const registeredUser = await User.register(user, password);
+    const Patient_id = registeredUser._id.toString();
+    console.log(registeredUser._id.toString());
     const patientData = await Patient.create({
-      Patient_id,
-      fname,
-      frname,
-      lname,
       ht,
       gen,
       st,
       adno,
-      mname,
       phn,
       wt,
       add,
       zc,
-    })
+    });
     req.login(registeredUser, (err) => {
-      if (err) return next(err)
-      res.render('users/photo', { id: Patient_id })
-    })
+      if (err) return next(err);
+      res.render("users/photo", { id: Patient_id });
+    });
   } catch (e) {
-    req.flash('error', `${e.message}`)
-    console.log(e)
-    res.redirect('/register/patient')
+    req.flash("error", `${e.message}`);
+    console.log(e);
+    res.redirect("/register/patient");
   }
-}
+};
 module.exports.registerhosp = async (req, res, next) => {
   try {
-    console.log(req.body)
-    const { email, username, password, hname, add, phn } = req.body
+    console.log(req.body);
+    const { email, username, password, hname, add, phn } = req.body;
 
-    const comp_type = 'hosp'
-    const user = new User({ email, username, comp_type })
+    const comp_type = "hosp";
+    const user = new User({ email, username, comp_type });
 
-    const registeredUser = await User.register(user, password)
-    const Hosp_id = registeredUser._id.toString()
-    console.log(registeredUser._id.toString())
+    const registeredUser = await User.register(user, password);
+    const Hosp_id = registeredUser._id.toString();
+    console.log(registeredUser._id.toString());
     const patientData = await Hospital.create({
       Hosp_id,
       hname,
 
       add,
       phn,
-    })
+    });
     req.login(registeredUser, (err) => {
-      if (err) return next(err)
-      res.redirect('/dashboard')
-    })
+      if (err) return next(err);
+      res.redirect("/dashboard");
+    });
   } catch (e) {
-    req.flash('error', `${e.message}`)
-    console.log(e)
-    res.redirect('register/hosp')
+    req.flash("error", `${e.message}`);
+    console.log(e);
+    res.redirect("register/hosp");
   }
-}
+};
 
 module.exports.renderLogin = (req, res) => {
-  res.render('users/login')
-}
+  res.render("users/login");
+};
 
 module.exports.login = (req, res) => {
   try {
-    console.log('Hello Inside Login controller')
-    console.log(req.user)
-    res.redirect('/dashboard')
+    console.log("Hello Inside Login controller");
+    console.log(req.user);
+    res.redirect("/dashboard");
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
-}
+};
 
 module.exports.logout = (req, res) => {
   req.logout(function (err) {
     if (err) {
-      console.log(err)
+      console.log(err);
     }
-    console.log('Logging Out')
-    req.flash('success', 'Goodbye!')
-    res.redirect('/')
-  })
-}
+    console.log("Logging Out");
+    req.flash("success", "Goodbye!");
+    res.redirect("/");
+  });
+};
 
 // module.exports.dashboard = async (req, res) => {
 //   const user = req.user
@@ -158,27 +143,27 @@ module.exports.dashboard = async (req, res) => {
   // const id = appointments[0].patient_id.toString()
   // const patient = await Patient.find({ Patient_id: id })
   // // return res.status(200).json({ appointments, patient })
-  const hospital_id = req.user._id
+  const hospital_id = req.user._id;
 
   // Check if hospital exists
-  const hospital = await Hospital.find({ Hosp_id: req.params.hospital_id })
+  const hospital = await Hospital.find({ Hosp_id: req.params.hospital_id });
   if (!hospital) {
-    return res.status(400).json({ error: 'Invalid hospital_id' })
+    return res.status(400).json({ error: "Invalid hospital_id" });
   }
 
   // Get appointments for the hospital and populate patient
   const appointments = await Appointment.find({
     hospital_id: hospital_id,
-  }).populate('no')
-  var id
-  var patient
-  var patients = []
-  console.log(appointments.length)
+  }).populate("no");
+  var id;
+  var patient;
+  var patients = [];
+  console.log(appointments.length);
   for (var i = 0; i < appointments.length; i++) {
-    id = appointments[i].patient_id.toString()
+    id = appointments[i].patient_id.toString();
 
-    patient = await Patient.find({ Patient_id: id })
-    patients.push(patient)
+    patient = await Patient.find({ Patient_id: id });
+    patients.push(patient);
   }
-  res.render('coupon/dashboard', { appointments, patients })
-}
+  res.render("coupon/dashboard", { appointments, patients });
+};

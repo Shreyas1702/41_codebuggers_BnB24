@@ -1,14 +1,22 @@
 * {
   color: white;
 }
-
+/* 
 body {
-  /* background-image: url("https://cdn.pixabay.com/photo/2016/03/27/16/23/woman-1283009_960_720.jpg");
+  background-image: url("https://cdn.pixabay.com/photo/2016/03/27/16/23/woman-1283009_960_720.jpg");
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: 0px -100px; */
+    background-position: 0px -100px;
   background-color: #f9f3f8;
+} */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: linear-gradient(to right, #ffd700, #1565c0);
 }
+
 .navbar {
   background-color: #000000e3;
   padding: 20px 80px;
@@ -67,7 +75,7 @@ a {
   padding: 10px 0px;
   margin: 0px auto;
   font-size: 20px;
-  width: 170px;
+  width: 70%;
   margin-top: 45px;
   margin-bottom: 20px;
   color: rgb(53, 70, 87);

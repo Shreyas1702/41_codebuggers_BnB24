@@ -66,10 +66,10 @@
 
         <!-- <button type="submit" id="btn-submit">Register</button> -->
       <!-- </form> -->
-      <div class="container shadow-lg">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card shadow-lg">
+      <!-- <div class="container shadow-lg col-md-2"> -->
+        <!-- <div class="row"> -->
+            <!-- <div class="col-md-6"> -->
+                <div class="card">
                     
                     <form
                         method="POST"
@@ -80,20 +80,6 @@
                     >
                         <h2>Patient Registration</h2>
                         <p class="text-muted">Enter following details carefully</p>
-                        <div class="row">
-                          <div class="col-md-3">
-                            <input type="text" name="fname" placeholder="First Name">
-                          </div>
-                          <div class="col-md-3">
-                            <input type="text" name="frname" placeholder="Father Name">
-                          </div>
-                          <div class="col-md-3">
-                            <input type="text" name="mname" placeholder="Mother Name">
-                          </div>
-                          <div class="col-md-3">
-                            <input type="text" name="lname" placeholder="Last Name">
-                          </div>
-                        </div>
                          <div class="row">
                             <div class="col-md-4">
                                 <input type="text" name="username" placeholder="Username">
@@ -142,8 +128,16 @@
                           </div> 
                             <div class="row">
                                 <div class="col-md-4"> 
+
+                                  <select name="gen" id="gen"  name="gen" >
+                                    <option value="" disabled selected>Select Gender</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
+                                    <option value="O">Other</option>
+
+                                  </select>
                                   
-                                  <input type="text" name="gen" placeholder="Gender">
+                                  <!-- <input type="text" name="gen" placeholder="Gender"> -->
                                  
                                 </div>
                                   <div class="col-md-4">
@@ -210,12 +204,12 @@
                         
                     </form>
                 </div>
-            </div>
-        </div>
-    </div>
+            <!-- </div> -->
+        <!-- </div> -->
+    <!-- </div> -->
     </div>
 
-    <div class="footer" style="margin-top: 1000px;">
+    <div class="footer" >
       <ul class="footer__nav">
         <li class="footer__item">
           <a class="footer__link" href="#">About</a>

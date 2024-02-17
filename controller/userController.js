@@ -27,12 +27,6 @@ module.exports.register = async (req, res, next) => {
 
     // comp_type = 'hosp'
     const user = new User({ email, username });
-    console.log(ht);
-    console.log(st);
-    console.log(gen);
-    console.log(phn);
-    console.log(zc);
-    console.log(wt);
 
     const registeredUser = await User.register(user, password);
     const Patient_id = registeredUser._id.toString();
@@ -60,24 +54,26 @@ module.exports.register = async (req, res, next) => {
 module.exports.registerhosp = async (req, res, next) => {
   try {
     console.log(req.body);
-    const { email, username, password, hname, add, phn } = req.body;
+    const { email, username, password, add, phn, specialization } = req.body;
 
     const comp_type = "hosp";
-    const user = new User({ email, username, comp_type });
+    const user = new Hospital({ email, username, phn, add, specialization });
 
-    const registeredUser = await User.register(user, password);
-    const Hosp_id = registeredUser._id.toString();
-    console.log(registeredUser._id.toString());
-    const patientData = await Hospital.create({
-      Hosp_id,
-      hname,
+    const registeredUser = await Hospital.register(user, password);
+    // const Hosp_id = registeredUser._id.toString();
+    // console.log(registeredUser._id);
+    // console.log(registeredUser._id.toString());
+    // const patientData = await Hospital.create({
+    //   Hosp_id,
+    //   hname,
 
-      add,
-      phn,
-    });
+    //   add,
+    //   phn,
+    // });
     req.login(registeredUser, (err) => {
       if (err) return next(err);
-      res.redirect("/dashboard");
+      console.log(req.user);
+      res.render("coupon/dashboard");
     });
   } catch (e) {
     req.flash("error", `${e.message}`);
@@ -129,6 +125,7 @@ module.exports.logout = (req, res) => {
 
 module.exports.dashboard = async (req, res) => {
   // const user = req.user._id
+  console.log(req.user);
 
   // // Check if hospital exists
   // const hospital = await Hospital.find({ Hosp_id: user })
@@ -143,27 +140,27 @@ module.exports.dashboard = async (req, res) => {
   // const id = appointments[0].patient_id.toString()
   // const patient = await Patient.find({ Patient_id: id })
   // // return res.status(200).json({ appointments, patient })
-  const hospital_id = req.user._id;
+  // const hospital_id = req.user._id;
 
-  // Check if hospital exists
-  const hospital = await Hospital.find({ Hosp_id: req.params.hospital_id });
-  if (!hospital) {
-    return res.status(400).json({ error: "Invalid hospital_id" });
-  }
+  // // Check if hospital exists
+  // const hospital = await Hospital.find({ Hosp_id: req.params.hospital_id });
+  // if (!hospital) {
+  //   return res.status(400).json({ error: "Invalid hospital_id" });
+  // }
 
-  // Get appointments for the hospital and populate patient
-  const appointments = await Appointment.find({
-    hospital_id: hospital_id,
-  }).populate("no");
-  var id;
-  var patient;
-  var patients = [];
-  console.log(appointments.length);
-  for (var i = 0; i < appointments.length; i++) {
-    id = appointments[i].patient_id.toString();
+  // // Get appointments for the hospital and populate patient
+  // const appointments = await Appointment.find({
+  //   hospital_id: hospital_id,
+  // }).populate("no");
+  // var id;
+  // var patient;
+  // var patients = [];
+  // console.log(appointments.length);
+  // for (var i = 0; i < appointments.length; i++) {
+  //   id = appointments[i].patient_id.toString();
 
-    patient = await Patient.find({ Patient_id: id });
-    patients.push(patient);
-  }
+  //   patient = await Patient.find({ Patient_id: id });
+  //   patients.push(patient);
+  // }
   res.render("coupon/dashboard", { appointments, patients });
 };

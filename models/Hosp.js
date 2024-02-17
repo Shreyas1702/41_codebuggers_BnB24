@@ -1,28 +1,46 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const passportLocalMongoose = require("passport-local-mongoose");
 
-const HospitalSchema = new Schema({
-  hname: {
+const DocSchema = new Schema({
+  email: {
     type: String,
-    required: [true, 'Plz provide your name'],
+    required: true,
+    unique: true,
+  },
+
+  username: {
+    type: String,
+    required: true,
+    unique: true,
   },
 
   phn: {
     type: Number,
-    required: [true, 'plz provide phone no'],
+    required: [true, "plz provide phone no"],
   },
 
   add: {
     type: String,
-    required: [true, 'plz provide address'],
+    required: [true, "plz provide address"],
   },
 
-  Hosp_id: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
-})
+  specialization: {
+    type: String,
+    required: [true, "plz provide Specialization"],
+  },
 
-module.exports = mongoose.model('Hosp', HospitalSchema)
+  tptat: {
+    type: Number,
+    default: 0,
+  },
+
+  ptscd: {
+    type: Number,
+    default: 0,
+  },
+});
+
+DocSchema.plugin(passportLocalMongoose);
+
+module.exports = mongoose.model("Hosp", DocSchema);
